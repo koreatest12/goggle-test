@@ -2,12 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Terminal, Sparkles, Cpu, BookOpen, Layers } from 'lucide-react';
+import { Terminal, Sparkles, Cpu, BookOpen, Layers, ShieldCheck } from 'lucide-react';
 import { GithubIcon } from './GithubIcon';
+import { ZeroCostBanner } from './ZeroCostBanner';
 
 export const Navbar: React.FC = () => {
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-neutral-950/80 border-b border-neutral-800">
+    <>
+      <ZeroCostBanner />
+      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-neutral-950/80 border-b border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -49,6 +52,11 @@ export const Navbar: React.FC = () => {
 
         {/* Right CTA */}
         <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>비용 $0.00 (무과금)</span>
+          </div>
+
           <a
             href="https://github.com/koreatest12/goggle-test"
             target="_blank"
@@ -61,5 +69,6 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };

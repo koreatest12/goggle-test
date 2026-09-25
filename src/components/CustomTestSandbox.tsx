@@ -35,15 +35,21 @@ export const CustomTestSandbox: React.FC = () => {
     <section id="sandbox" className="py-16 border-b border-neutral-800 bg-neutral-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            Interactive AI Coding Sandbox
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              Interactive AI Coding Sandbox
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              과금 0원 보장 (API Key 불필요)
+            </div>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             직접 코딩 테스트 프롬프트 시험하기
           </h2>
           <p className="text-neutral-400 text-sm mt-1">
-            원하는 알고리즘이나 기능 요구사항을 입력하여 Claude, Codex, Antigravity 모델의 처리 방식과 아키텍처 특성을 가상 테스트해보세요.
+            원하는 알고리즘이나 기능 요구사항을 입력하여 Claude, Codex, Antigravity 모델의 처리 방식과 아키텍처 특성을 가상 테스트해보세요. (외부 유료 API를 직접 호출하지 않으므로 결제가 일절 발생하지 않습니다.)
           </p>
         </div>
 

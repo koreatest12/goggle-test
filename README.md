@@ -16,6 +16,20 @@
 
 ---
 
+## 🛡️ 과금 방지 무과금(Zero-Cost) 안전 정책 & 아키텍처
+
+본 프로젝트는 **사용자 비용 $0.00(완전 무료)** 로 운영되도록 아키텍처 레벨에서 과금 요소를 원천 차단했습니다:
+
+1. **외부 유료 API 연동 차단 ($0.00)**
+   - Anthropic, OpenAI, Google Cloud 등의 유료 결제 계정 연동이나 신용카드 등록이 전혀 필요하지 않습니다.
+   - 모든 AI 모델의 코드 비교, 벤치마크 점수, 알고리즘 분석은 사전 검증된 고정밀 데이터셋과 브라우저 클라이언트 사이드 가상 시뮬레이터로 구동됩니다.
+2. **평생 무료 GitHub Pages 정적 배포 지원**
+   - Next.js의 `output: 'export'` 정적 사이트 생성(SSG) 기능과 `.github/workflows/deploy.yml` GitHub Actions를 통해, Vercel 유료 플랜이나 유료 서버 호스팅 없이 **GitHub Pages에서 100% 무료로 배포/호스팅**됩니다.
+3. **API Key 불필요 & 개인정보 보호**
+   - 어떠한 API Key도 브라우저나 로컬 스토리지에 요구하거나 외부로 전송하지 않습니다.
+
+---
+
 ## ✨ 핵심 기능 (Features)
 
 1. **2026 AI Coding Benchmark Scoreboard**
