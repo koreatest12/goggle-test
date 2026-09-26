@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Leaderboard } from '@/components/Leaderboard';
 import { TestCard } from '@/components/TestCard';
 import { TestDetailModal } from '@/components/TestDetailModal';
@@ -24,24 +24,63 @@ import {
   ArrowRight,
   ShieldCheck,
   BookOpen,
+  RotateCcw,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
+  const [sortBy, setSortBy] = useState<'default' | 'difficulty' | 'speed'>('default');
   const [activeTest, setActiveTest] = useState<CodingTestItem | null>(null);
   const [activeArticle, setActiveArticle] = useState<BlogArticle | null>(null);
 
-  const categories = ['All', 'Algorithms', 'Concurrency', 'Fullstack', 'Bug Hunting'];
+  const categories = useMemo(
+    () => ['All', ...Array.from(new Set(CODING_TESTS.map((test) => test.category)))],
+    []
+  );
+  const difficulties = ['All', 'Easy', 'Medium', 'Hard', 'Extreme'];
+  const difficultyRank: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3, Extreme: 4 };
 
-  const filteredTests = CODING_TESTS.filter((t) => {
-    const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
-    const matchesSearch =
-      t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const filteredTests = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const result = CODING_TESTS.filter((test) => {
+      const matchesCategory = selectedCategory === 'All' || test.category === selectedCategory;
+      const matchesDifficulty =
+        selectedDifficulty === 'All' || test.difficulty === selectedDifficulty;
+      const matchesSearch =
+        !query ||
+        test.title.toLowerCase().includes(query) ||
+        test.description.toLowerCase().includes(query) ||
+        test.tags.some((tag) => tag.toLowerCase().includes(query));
+
+      return matchesCategory && matchesDifficulty && matchesSearch;
+    });
+
+    if (sortBy === 'difficulty') {
+      return [...result].sort(
+        (a, b) => (difficultyRank[b.difficulty] ?? 0) - (difficultyRank[a.difficulty] ?? 0)
+      );
+    }
+
+    if (sortBy === 'speed') {
+      return [...result].sort((a, b) => {
+        const aFastest = Math.min(...Object.values(a.solutions).map((solution) => solution.executionTimeMs));
+        const bFastest = Math.min(...Object.values(b.solutions).map((solution) => solution.executionTimeMs));
+        return aFastest - bFastest;
+      });
+    }
+
+    return result;
+  }, [searchQuery, selectedCategory, selectedDifficulty, sortBy]);
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('All');
+    setSelectedDifficulty('All');
+    setSortBy('default');
+  };
 
   return (
     <div className="w-full">
@@ -139,34 +178,74 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Search Box */}
-            <div className="relative w-full md:w-72">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="문제명, 알고리즘, 태그 검색..."
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl pl-10 pr-4 py-2 text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-blue-500/50"
-              />
+            <div className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
+              <div className="relative w-full sm:w-72">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="문제명, 알고리즘, 태그 검색..."
+                  aria-label="코딩 테스트 검색"
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-blue-500/50"
+                />
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'default' | 'difficulty' | 'speed')}
+                aria-label="정렬 기준"
+                className="bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2.5 text-xs text-neutral-300 focus:outline-none focus:border-blue-500/50"
+              >
+                <option value="default">기본 정렬</option>
+                <option value="difficulty">난이도 높은 순</option>
+                <option value="speed">최고 실행속도 순</option>
+              </select>
             </div>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-8 text-xs scrollbar-none">
-            {categories.map((cat) => (
+          <div className="mb-8 space-y-3">
+            <div className="flex items-center gap-2 text-xs text-neutral-400">
+              <SlidersHorizontal className="w-4 h-4" />
+              <span>카테고리</span>
+              <span className="ml-auto font-mono text-neutral-500">{filteredTests.length}개 결과</span>
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs scrollbar-none">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-lg whitespace-nowrap transition-all font-medium ${
+                    selectedCategory === cat
+                      ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                      : 'bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800'
+                  }`}
+                >
+                  {cat === 'All' ? '전체 문제' : cat}
+                </button>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {difficulties.map((difficulty) => (
+                <button
+                  key={difficulty}
+                  onClick={() => setSelectedDifficulty(difficulty)}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                    selectedDifficulty === difficulty
+                      ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300'
+                      : 'bg-neutral-900 border border-neutral-800 text-neutral-500 hover:text-neutral-300'
+                  }`}
+                >
+                  {difficulty === 'All' ? '모든 난이도' : difficulty}
+                </button>
+              ))}
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg whitespace-nowrap transition-all font-medium ${
-                  selectedCategory === cat
-                    ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                    : 'bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800'
-                }`}
+                onClick={resetFilters}
+                className="ml-auto px-3 py-1.5 rounded-lg border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 flex items-center gap-1.5"
               >
-                {cat === 'All' ? '전체 문제' : cat}
+                <RotateCcw className="w-3.5 h-3.5" />
+                필터 초기화
               </button>
-            ))}
+            </div>
           </div>
 
           {/* Test Cards Grid */}
