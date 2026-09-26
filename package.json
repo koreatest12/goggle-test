@@ -1,12 +1,15 @@
 {
   "name": "goggle-test",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "AI coding benchmark and agent engineering lab built with Next.js",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "check": "tsc --noEmit",
     "build": "next build",
+    "verify:build": "node scripts/verify-build.mjs",
+    "build:manual": "npm run check && npm run build && npm run verify:build",
+    "build:full": "npm ci && npm run build:manual",
     "start": "node scripts/server.mjs",
     "serve": "node scripts/server.mjs"
   },
