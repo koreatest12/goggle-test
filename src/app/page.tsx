@@ -7,6 +7,7 @@ import { TestDetailModal } from '@/components/TestDetailModal';
 import { ArticleCard } from '@/components/ArticleCard';
 import { ArticleModal } from '@/components/ArticleModal';
 import { CustomTestSandbox } from '@/components/CustomTestSandbox';
+import { AgentEngineeringLab } from '@/components/AgentEngineeringLab';
 import { CODING_TESTS } from '@/data/codingTests';
 import { BLOG_ARTICLES } from '@/data/articles';
 import { CodingTestItem, BlogArticle } from '@/types';
@@ -117,6 +118,9 @@ export default function HomePage() {
 
       {/* Leaderboard Section */}
       <Leaderboard />
+
+      {/* AI Agent Engineering Lab */}
+      <AgentEngineeringLab />
 
       {/* Coding Tests Comparison Section */}
       <section id="tests" className="py-16 border-b border-neutral-800 bg-neutral-950">
