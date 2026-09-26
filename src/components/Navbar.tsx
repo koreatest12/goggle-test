@@ -36,6 +36,10 @@ export const Navbar: React.FC = () => {
             <Cpu className="w-4 h-4 text-emerald-400" />
             벤치마크 리더보드
           </a>
+          <a href="#agents" className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            Agent Engineering
+          </a>
           <a href="#tests" className="flex items-center gap-1.5 hover:text-white transition-colors">
             <Layers className="w-4 h-4 text-blue-400" />
             코딩 테스트 비교
