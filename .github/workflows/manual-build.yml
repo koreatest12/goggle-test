@@ -11,6 +11,7 @@ on:
         options:
           - validate
           - build
+          - security
           - full
       deploy:
         description: "Deploy to GitHub Pages after a successful build"
@@ -52,8 +53,12 @@ jobs:
         run: npm ci
 
       - name: TypeScript validation
-        if: inputs.profile == 'validate' || inputs.profile == 'full'
+        if: inputs.profile == 'validate' || inputs.profile == 'security' || inputs.profile == 'full'
         run: npm run check
+
+      - name: Dependency security audit
+        if: inputs.profile == 'security' || inputs.profile == 'full'
+        run: npm audit --omit=dev --audit-level=critical
 
       - name: Build static site
         if: inputs.profile == 'build' || inputs.profile == 'full'
