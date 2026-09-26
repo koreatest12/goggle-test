@@ -30,6 +30,54 @@
 
 ---
 
+## 🆕 v1.3 Manual Build Center & 통합 빌드
+
+- **Manual Build Center UI**: 홈페이지에서 Validate / Build / Security / Full Build 프로필과 전체 파이프라인 확인
+- **GitHub Actions 수동 실행**: `.github/workflows/manual-build.yml`에서 profile과 Pages deploy 여부를 직접 선택
+- **로컬 수동 빌드**: `npm run build:manual`로 TypeScript → Next.js Build → 정적 산출물 검증을 일괄 실행
+- **Full Build**: `npm run build:full`로 npm ci → TypeScript → production dependency 보안 감사 → Build → Verify 수행
+- **공통 Build Verifier**: `scripts/verify-build.mjs`에서 `out/index.html`, `.nojekyll`, `_next`, HTML 산출물 생성 여부 검증
+- **Security Profile**: `npm audit --omit=dev --audit-level=critical`을 수동 빌드 프로필에 통합
+- **CodeQL 통합 강화**: workflow_dispatch 지원, Ubuntu 24.04 고정, Node 24 준비, security-extended/security-and-quality 쿼리 적용
+- **CodeQL manual placeholder 제거**: 향후 manual build-mode 사용 시 실제 `npm ci → check → build → verify` 실행
+- **자동 Deploy와 검증 로직 통일**: 일반 Pages 배포도 `npm run verify:build` 사용
+
+### Windows PowerShell 수동 빌드
+
+```powershell
+npm ci
+npm run check
+npm run build
+npm run verify:build
+```
+
+한 번에 실행:
+
+```powershell
+npm run build:manual
+```
+
+보안 점검까지 포함한 전체 빌드:
+
+```powershell
+npm run build:full
+```
+
+로컬 프로덕션 서버 실행:
+
+```powershell
+npm start
+```
+
+헬스체크:
+
+```text
+http://localhost:3000/api/health
+http://localhost:3000/healthz
+```
+
+---
+
 ## 🆕 v1.2 프로덕션 서버 업그레이드
 
 - **Node.js 24 네이티브 고성능 정적 웹서버 탑재 (`scripts/server.mjs`)**: 외부 의존성 없는 가볍고 빠른 서버 스크립트 제공
@@ -139,6 +187,7 @@ goggle-test/
 │   │   ├── TestDetailModal.tsx # 인터랙티브 코드 뷰어 & 테스트 실행 모달
 │   │   ├── ArticleCard.tsx     # 기술 블로그 아티클 카드
 │   │   ├── ArticleModal.tsx    # 블로그 전문 리딩 모달
+│   │   ├── ManualBuildCenter.tsx # Validate/Build/Security/Full 수동 빌드 센터
 │   │   ├── AgentEngineeringLab.tsx # Tool/Router/Handoff/Incident Agent 시뮬레이터
 │   │   ├── CustomTestSandbox.tsx # 실시간 프롬프트 샌드박스
 │   │   └── GithubIcon.tsx      # SVG GitHub 아이콘
@@ -148,6 +197,13 @@ goggle-test/
 │   │   └── articles.ts         # 심층 벤치마크 리포트 아티클
 │   └── types/
 │       └── index.ts            # TypeScript 인터페이스 정의
+├── scripts/
+│   ├── server.mjs              # Node 24 정적 프로덕션 서버
+│   └── verify-build.mjs        # 정적 빌드 산출물 검증
+├── .github/workflows/
+│   ├── deploy.yml              # 자동 GitHub Pages 배포
+│   ├── manual-build.yml        # 수동 빌드/선택 배포
+│   └── codeql.yml              # CodeQL 보안 분석
 ├── package.json
 ├── tsconfig.json
 ├── postcss.config.mjs
