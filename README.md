@@ -30,6 +30,19 @@
 
 ---
 
+## 🆕 v1.1 업그레이드
+
+- Node.js 24 / npm 11 런타임 기준 고정
+- GitHub Actions Ubuntu 24.04 고정 및 TypeScript 사전 검증 추가
+- 코딩 테스트 동적 카테고리, 난이도 필터, 검색, 정렬, 결과 수 표시
+- 모바일 내비게이션 추가
+- Agent Engineering Lab에 Trace Console, 진행률, 실행시간, Tool Call 메트릭, 실행 취소 기능 추가
+- 커스텀 샌드박스가 프롬프트 내용과 선택 언어를 분석해 결과를 동적으로 생성
+- 테스트 실행기가 모든 Test Case를 순차 검증하고 실제 passCount/totalTests를 표시
+- SEO/Open Graph 메타데이터 개선
+
+---
+
 ## ✨ 핵심 기능 (Features)
 
 1. **2026 AI Coding Benchmark Scoreboard**
@@ -63,6 +76,7 @@
 
 ## 🛠 기술 스택 (Tech Stack)
 
+- **Runtime**: Node.js 24 / npm 11
 - **Framework**: Next.js 16 (App Router, Turbopack)
 - **Library**: React 19, TypeScript
 - **Styling**: Tailwind CSS v4, Modern Color Scheme (Dark Mode first)
