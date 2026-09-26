@@ -17,6 +17,7 @@ import { ZeroCostBanner } from './ZeroCostBanner';
 
 const navItems = [
   { href: '#leaderboard', label: '벤치마크', icon: Cpu, color: 'text-emerald-400' },
+  { href: '#build-center', label: 'Manual Build', icon: Terminal, color: 'text-indigo-400' },
   { href: '#agents', label: 'Agent Engineering', icon: Sparkles, color: 'text-cyan-400' },
   { href: '#tests', label: '코딩 테스트', icon: Layers, color: 'text-blue-400' },
   { href: '#articles', label: '분석 리포트', icon: BookOpen, color: 'text-amber-400' },
