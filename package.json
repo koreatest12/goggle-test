@@ -1,10 +1,11 @@
 {
   "name": "goggle-test",
-  "version": "1.0.0",
-  "description": "claude,codex,antigavity에 있는 모든 코딩 테스트할수 있게 하는 블로그",
+  "version": "1.1.0",
+  "description": "AI coding benchmark and agent engineering lab built with Next.js",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
+    "check": "tsc --noEmit",
     "build": "next build",
     "start": "next start"
   },
@@ -17,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/koreatest12/goggle-test/issues"
   },
-  "homepage": "https://github.com/koreatest12/goggle-test#readme",
+  "homepage": "https://koreatest12.github.io/goggle-test/",
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "clsx": "^2.1.1",
@@ -37,5 +38,9 @@
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=11"
   }
 }
