@@ -1,9 +1,35 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { AI_MODELS } from '@/data/models';
 import { AIModelId } from '@/types';
 import { Sparkles, Play, CheckCircle2, Terminal, Code2, ShieldAlert } from 'lucide-react';
+
+const getModelSuggestion = (modelId: AIModelId, prompt: string, language: string) => {
+  const normalized = prompt.toLowerCase();
+  const topic = normalized.includes('cache')
+    ? '캐시/자료구조'
+    : normalized.includes('react') || normalized.includes('hook')
+    ? 'React 상태/렌더링'
+    : normalized.includes('retry') || normalized.includes('재시도') || normalized.includes('backoff')
+    ? '네트워크 복원력'
+    : normalized.includes('concurr') || normalized.includes('동시')
+    ? '동시성 제어'
+    : '일반 알고리즘';
+
+  const base = {
+    antigravity: '도구 분해 → 병렬 검증 → 실패 경로 재검사 → 통합 결과',
+    claude: '명확한 타입/인터페이스 → 예외 처리 → 가독성 중심 구현 → 엣지케이스 검증',
+    codex: '제약조건 추출 → 복잡도 최소화 → 핵심 알고리즘 구현 → 경계값 검증',
+  }[modelId];
+
+  return {
+    topic,
+    architecture: `${language} · ${topic} · ${base}`,
+    complexity:
+      topic === '캐시/자료구조' ? 'O(1) 목표' : topic === 'React 상태/렌더링' ? '렌더 최소화' : '입력 제약 기반',
+  };
+};
 
 export const CustomTestSandbox: React.FC = () => {
   const [prompt, setPrompt] = useState(
@@ -13,6 +39,10 @@ export const CustomTestSandbox: React.FC = () => {
   const [isSimulating, setIsSimulating] = useState(false);
   const [resultReady, setResultReady] = useState(false);
   const [activeTab, setActiveTab] = useState<AIModelId>('antigravity');
+  const activeSuggestion = useMemo(
+    () => getModelSuggestion(activeTab, prompt, selectedLanguage),
+    [activeTab, prompt, selectedLanguage]
+  );
 
   const presetPrompts = [
     { label: '지수 백오프 fetchWithRetry', text: 'TypeScript로 지수 백오프(Exponential Backoff) 및 지터(Jitter)를 적용한 fetchWithRetry 함수를 구현하고 최대 재시도 횟수 초과 시 커스텀 예외를 발생시키세요.' },
@@ -85,11 +115,15 @@ export const CustomTestSandbox: React.FC = () => {
 
               <textarea
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) => setPrompt(e.target.value.slice(0, 1200))}
                 rows={5}
                 className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-xs sm:text-sm text-neutral-200 font-mono focus:outline-none focus:border-blue-500/50 resize-none"
                 placeholder="코딩 문제나 알고리즘 요구사항을 입력하세요..."
               />
+              <div className="flex items-center justify-between text-[11px] text-neutral-500">
+                <span>선택 언어: {selectedLanguage}</span>
+                <span>{prompt.length}/1200</span>
+              </div>
 
               <button
                 onClick={handleRunSimulation}
@@ -151,16 +185,14 @@ export const CustomTestSandbox: React.FC = () => {
                       <div className="text-emerald-400 font-bold mb-1">
                         ✓ {AI_MODELS[activeTab].name} 제안 아키텍처
                       </div>
-                      <p className="text-neutral-400 text-[11px] leading-relaxed">
-                        {activeTab === 'antigravity'
-                          ? '• 자가 치유(Self-healing) 루프가 내장된 Full Jitter 알고리즘 적용 (Math.random() * backoffMs)\n• AbortController 지원 및 네트워크 연결 끊김 자동 폴백 핸들링'
-                          : activeTab === 'claude'
-                          ? '• 커스텀 MaxRetriesExceededError 에러 클래스 상속 및 완벽한 JSDoc 문서화\n• Promise 레이스 컨디션을 방지하는 우아한 클린 함수 설계'
-                          : '• 최소 토큰 사용량과 극한의 O(1) 인라인 계산 최적화\n• 수학적 지수 곱셈 오버플로우 방지 (Math.min(maxBackoff, base * 2**attempt))'}
+                      <p className="text-neutral-400 text-[11px] leading-relaxed whitespace-pre-line">
+                        {activeSuggestion.architecture}
                       </p>
-                      <div className="pt-2 border-t border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span>예상 복잡도: O(1) Memory</span>
-                        <span className="text-blue-400">추천도: 98%</span>
+                      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400">
+                        <span>분류: <b className="text-neutral-300">{activeSuggestion.topic}</b></span>
+                        <span>목표: <b className="text-blue-400">{activeSuggestion.complexity}</b></span>
+                        <span>언어: <b className="text-neutral-300">{selectedLanguage}</b></span>
+                        <span>프롬프트: <b className="text-neutral-300">{prompt.length} chars</b></span>
                       </div>
                     </div>
                   </div>
