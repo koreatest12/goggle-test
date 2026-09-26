@@ -9,9 +9,10 @@
     "build": "next build",
     "verify:build": "node scripts/verify-build.mjs",
     "build:manual": "npm run check && npm run build && npm run verify:build",
-    "build:full": "npm ci && npm run build:manual",
+    "build:full": "npm ci && npm run check && npm run security && npm run build && npm run verify:build",
     "start": "node scripts/server.mjs",
-    "serve": "node scripts/server.mjs"
+    "serve": "node scripts/server.mjs",
+    "security": "npm audit --omit=dev --audit-level=critical"
   },
   "repository": {
     "type": "git",
