@@ -30,40 +30,47 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({ test, onClose 
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const runSimulation = () => {
+  const runSimulation = async () => {
+    if (isRunning) return;
+
     setIsRunning(true);
     setSimulationCompleted(false);
     setConsoleLogs([
-      `[Runner] ${modelInfo.name} 코드 컴파일 시작...`,
-      `[Runner] TypeScript Strict Type Checking... OK`,
-      `[Runner] 테스트 케이스 셋 로드 완료 (${test.testCases.length}개 케이스)`,
+      `[Runner] ${modelInfo.name} 코드 검증 시작...`,
+      `[Runner] 언어: ${currentSolution.language}`,
+      `[Runner] 테스트 케이스 ${test.testCases.length}개 로드 완료`,
     ]);
 
-    setTimeout(() => {
+    for (let index = 0; index < test.testCases.length; index += 1) {
+      const testCase = test.testCases[index];
+      await new Promise((resolve) => window.setTimeout(resolve, 350));
       setConsoleLogs((prev) => [
         ...prev,
-        `[TestCase 1] 입력: ${test.testCases[0]?.input || 'default input'}`,
-        `[TestCase 1] 실행 시간: ${currentSolution.executionTimeMs}ms (정상 통과 ✓)`,
+        `[TestCase ${index + 1}] 입력: ${testCase.input}`,
+        `[TestCase ${index + 1}] 기대값: ${testCase.expectedOutput}`,
+        `[TestCase ${index + 1}] 결과: PASS ✓`,
       ]);
+    }
 
-      setTimeout(() => {
-        setIsRunning(false);
-        setSimulationCompleted(true);
-        setConsoleLogs((prev) => [
-          ...prev,
-          `[Summary] 100% 테스트 통과! (메모리 릭 제로, O(N) 수렴)`,
-        ]);
-        try {
-          confetti({
-            particleCount: 50,
-            spread: 60,
-            origin: { y: 0.7 },
-          });
-        } catch (e) {
-          // ignore if canvas unavailable
-        }
-      }, 700);
-    }, 800);
+    await new Promise((resolve) => window.setTimeout(resolve, 250));
+    setIsRunning(false);
+    setSimulationCompleted(true);
+    setConsoleLogs((prev) => [
+      ...prev,
+      `[Summary] ${currentSolution.passCount}/${currentSolution.totalTests} 테스트 통과 · 평균 실행 ${currentSolution.executionTimeMs}ms · ${currentSolution.tokensUsed} tokens`,
+    ]);
+
+    if (currentSolution.passed) {
+      try {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 },
+        });
+      } catch {
+        // Canvas unavailable
+      }
+    }
   };
 
   return (
@@ -191,7 +198,9 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({ test, onClose 
             <div className="relative rounded-xl border border-neutral-800 bg-neutral-950 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-800/80 bg-neutral-900/40 text-xs text-neutral-400 font-mono">
                 <span>solution.{currentSolution.language}</span>
-                <span className="text-emerald-400">All Tests Passed ✓</span>
+                <span className={currentSolution.passed ? 'text-emerald-400' : 'text-amber-400'}>
+                  {currentSolution.passCount}/{currentSolution.totalTests} Tests Passed {currentSolution.passed ? '✓' : ''}
+                </span>
               </div>
               <pre className="p-4 text-xs font-mono text-neutral-200 overflow-x-auto leading-relaxed max-h-96">
                 <code>{currentSolution.code}</code>
