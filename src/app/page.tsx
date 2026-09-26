@@ -8,6 +8,7 @@ import { ArticleCard } from '@/components/ArticleCard';
 import { ArticleModal } from '@/components/ArticleModal';
 import { CustomTestSandbox } from '@/components/CustomTestSandbox';
 import { AgentEngineeringLab } from '@/components/AgentEngineeringLab';
+import { ManualBuildCenter } from '@/components/ManualBuildCenter';
 import { CODING_TESTS } from '@/data/codingTests';
 import { BLOG_ARTICLES } from '@/data/articles';
 import { CodingTestItem, BlogArticle } from '@/types';
@@ -157,6 +158,9 @@ export default function HomePage() {
 
       {/* Leaderboard Section */}
       <Leaderboard />
+
+      {/* Manual Build Center */}
+      <ManualBuildCenter />
 
       {/* AI Agent Engineering Lab */}
       <AgentEngineeringLab />
