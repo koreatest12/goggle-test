@@ -51,7 +51,12 @@
    - *Antigravity 멀티에이전트 시스템: 자가 치유(Self-Healing) 코딩 메커니즘*
    - *프롬프트 엔지니어링 2026: Reasoning 모델 최적 코드 추출 5대 원칙*
 
-5. **인터랙티브 커스텀 프롬프트 샌드박스**
+5. **AI Agent Engineering Lab**
+   - Tool Agent, Router Agent, Multi-Agent Handoff, Incident Ops Agent 패턴을 브라우저에서 단계별 시뮬레이션
+   - 외부 API 호출 없이 에이전트 오케스트레이션 흐름과 운영 자동화 구조를 학습
+   - 인프라 장애 대응 시나리오를 통해 알람 → 지표 → 로그 → 원인 후보 → Runbook 흐름 확인
+
+6. **인터랙티브 커스텀 프롬프트 샌드박스**
    - 사용자가 직접 코딩 테스트 프롬프트를 입력하고 3대 모델의 예상 접근법과 아키텍처를 비교 분석
 
 ---
@@ -109,6 +114,7 @@ goggle-test/
 │   │   ├── TestDetailModal.tsx # 인터랙티브 코드 뷰어 & 테스트 실행 모달
 │   │   ├── ArticleCard.tsx     # 기술 블로그 아티클 카드
 │   │   ├── ArticleModal.tsx    # 블로그 전문 리딩 모달
+│   │   ├── AgentEngineeringLab.tsx # Tool/Router/Handoff/Incident Agent 시뮬레이터
 │   │   ├── CustomTestSandbox.tsx # 실시간 프롬프트 샌드박스
 │   │   └── GithubIcon.tsx      # SVG GitHub 아이콘
 │   ├── data/
