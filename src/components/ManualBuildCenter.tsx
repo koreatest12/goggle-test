@@ -15,7 +15,7 @@ import {
   TerminalSquare,
 } from 'lucide-react';
 
-type BuildProfile = 'validate' | 'build' | 'full';
+type BuildProfile = 'validate' | 'build' | 'security' | 'full';
 
 const PROFILES = {
   validate: {
@@ -29,6 +29,12 @@ const PROFILES = {
     description: 'Next.js 정적 export + 산출물 검증',
     command: 'npm run build && npm run verify:build',
     steps: ['npm ci', 'next build', 'out/ 검증', 'artifact 생성'],
+  },
+  security: {
+    label: 'Security',
+    description: 'TypeScript 검증 + production dependency critical audit',
+    command: 'npm run check && npm audit --omit=dev --audit-level=critical',
+    steps: ['npm ci', 'tsc --noEmit', 'npm audit', '보안 결과 확인'],
   },
   full: {
     label: 'Full Build',
@@ -48,8 +54,9 @@ export const ManualBuildCenter: React.FC = () => {
       { label: 'Checkout', detail: 'actions/checkout@v7', icon: Code2 },
       { label: 'Node Runtime', detail: 'Node.js 24 / npm 11', icon: ServerCog },
       { label: 'Validation', detail: profile === 'build' ? '선택적' : 'tsc --noEmit', icon: ShieldCheck },
-      { label: 'Static Build', detail: profile === 'validate' ? '생략' : 'Next.js export', icon: Boxes },
-      { label: 'Verify', detail: profile === 'validate' ? '생략' : 'out/index.html · .nojekyll · _next', icon: FileCheck2 },
+      { label: 'Security', detail: profile === 'security' || profile === 'full' ? 'npm audit critical' : '선택적', icon: ShieldCheck },
+      { label: 'Static Build', detail: profile === 'validate' || profile === 'security' ? '생략' : 'Next.js export', icon: Boxes },
+      { label: 'Verify', detail: profile === 'validate' || profile === 'security' ? '생략' : 'out/index.html · .nojekyll · _next', icon: FileCheck2 },
       { label: 'Deploy', detail: '선택 시 GitHub Pages', icon: CloudUpload },
     ],
     [profile]
@@ -159,6 +166,7 @@ export const ManualBuildCenter: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {[
                   'TypeScript compile error 없음',
+                  'production dependency critical audit 지원',
                   'out/index.html 생성',
                   'out/.nojekyll 생성',
                   'out/_next 정적 자산 생성',
