@@ -1,13 +1,14 @@
 {
   "name": "goggle-test",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "AI coding benchmark and agent engineering lab built with Next.js",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "check": "tsc --noEmit",
     "build": "next build",
-    "start": "next start"
+    "start": "node scripts/server.mjs",
+    "serve": "node scripts/server.mjs"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.6.1",

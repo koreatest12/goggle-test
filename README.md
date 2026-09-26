@@ -30,6 +30,17 @@
 
 ---
 
+## 🆕 v1.2 프로덕션 서버 업그레이드
+
+- **Node.js 24 네이티브 고성능 정적 웹서버 탑재 (`scripts/server.mjs`)**: 외부 의존성 없는 가볍고 빠른 서버 스크립트 제공
+- **Next.js 정적 내보내기(`output: export`) `npm start` 충돌 해결**: `next start` 미지원 문제를 해결하고 즉시 `npm start` 또는 `npm run serve`로 배포 가능
+- **실시간 헬스체크 엔드포인트 지원**: `/api/health` 및 `/healthz`를 통한 서버 가동 상태, 업타임, Node.js 런타임 정보 JSON 제공
+- **압축 및 보안 최적화**: 텍스트 리소스 Gzip/Deflate 자동 압축, 불변 정적 에셋 장기 캐싱(`immutable`), 보안 헤더(No-Sniff, Same-Origin) 적용
+- **Turbopack / outputFileTracing 루트 설정**: `next.config.mjs`에 `outputFileTracingRoot` 및 `turbopack.root`를 명시하여 빌드 경고 제거
+- **런타임 의존성 최신화**: `@types/node` 26.6.3 업그레이드
+
+---
+
 ## 🆕 v1.1 업그레이드
 
 - Node.js 24 / npm 11 런타임 기준 고정
